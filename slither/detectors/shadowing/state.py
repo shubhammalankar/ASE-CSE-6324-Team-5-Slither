@@ -5,11 +5,12 @@ Module detecting shadowing of state variables
 from slither.detectors.abstract_detector import AbstractDetector, DetectorClassification
 from slither.core.declarations import Contract
 from .common import is_upgradable_gap_variable
-
+import logging
 
 def detect_shadowing(contract: Contract):
     ret = []
     variables_fathers = []
+    logging.debug("Check for detect_shadowing.py")
     for father in contract.inheritance:
         if any(f.is_implemented for f in father.functions + father.modifiers):
             variables_fathers += father.state_variables_declared

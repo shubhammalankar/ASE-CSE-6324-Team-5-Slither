@@ -2,6 +2,7 @@
 Module detecting local variable shadowing
 """
 
+import logging
 from slither.detectors.abstract_detector import AbstractDetector, DetectorClassification
 
 
@@ -57,6 +58,7 @@ contract Bug {
         Returns:
             list of tuple: (type, contract name, definition)"""
         result = []
+        logging.debug("Checking builtin_symbols.py file ---------------->")
 
         # Loop through all functions + modifiers in this contract.
         for function in contract.functions + contract.modifiers:

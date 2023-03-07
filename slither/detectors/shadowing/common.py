@@ -1,3 +1,4 @@
+import logging
 from slither.core.declarations import Contract
 from slither.core.variables.state_variable import StateVariable
 from slither.core.solidity_types import ArrayType, ElementaryType
@@ -9,6 +10,7 @@ def is_upgradable_gap_variable(contract: Contract, variable: StateVariable) -> b
      - variable is named "__gap"
      - it is a uint256 array declared at the end of the contract
      - it has private visibility"""
+    logging.debug("Checking common.py file ---------------->")
 
     # Return early on if the variable name is != gap to avoid iterating over all the state variables
     if variable.name != "__gap":

@@ -2,7 +2,8 @@
 Check for state variables too similar
 Do not check contract inheritance
 """
-import difflib
+import jellyfish
+import itertools
 
 from slither.detectors.abstract_detector import AbstractDetector, DetectorClassification
 
@@ -29,7 +30,6 @@ class SimilarVarsDetection(AbstractDetector):
     @staticmethod
     def similar(seq1, seq2):
         """Test the name similarity
-
         Two name are similar if difflib.SequenceMatcher on the lowercase
         version of the name is greater than 0.90
         See: https://docs.python.org/2/library/difflib.html
@@ -39,36 +39,44 @@ class SimilarVarsDetection(AbstractDetector):
         Returns:
             bool: true if names are similar
         """
+        #check if length of both variables. 
         if len(seq1) != len(seq2):
             return False
-        val = difflib.SequenceMatcher(a=seq1.lower(), b=seq2.lower()).ratio()
-        ret = val > 0.90
-        return ret
+        #convert variable into lowercase.
+        a=seq1.lower()
+        b=seq2.lower()
+        #Jaro-Winkler measures the similarity using the number of
+        #similar and the position of the similar characters in
+        #the variables 
+        val = jellyfish.jaro_winkler(a,b)
+        #comparing the similartiy ratio with a constant
+        #value 0.90 if greater than 0.90 return True
+        ret = val > 0.90 
+        return ret # retrun the boolean value 
 
     @staticmethod
     def detect_sim(contract):
         """Detect variables with similar name
-
         Returns:
             bool: true if variables have similar name
         """
+        #extract all variables from contracts functions.
         all_var = [x.variables for x in contract.functions]
         all_var = [x for l in all_var for x in l]
-
+        #extract all global variables from contacts.
         contract_var = contract.variables
-
+        #append all variables and typecast into set so that it removes duplicate.
         all_var = set(all_var + contract_var)
-
         ret = []
-        for v1 in all_var:
-            for v2 in all_var:
-                if v1.name.lower() != v2.name.lower():
+        # Generates all possible combinations of given iterable list of a given length
+        for v1, v2 in itertools.combinations(all_var, 2):
+            if v1.name.lower() != v2.name.lower(): # check if variables are not same
+                    #call similar function which finds similar variables.
                     if SimilarVarsDetection.similar(v1.name, v2.name):
                         if (v2, v1) not in ret:
-                            ret.append((v1, v2))
-
-        return set(ret)
-
+                            ret.append((v1, v2)) #append the variables to the result list i.e ret
+        return set(ret) #remove the duplicates by typecasting list to set 
+        
     def _detect(self):
         """Detect similar variables name
 
@@ -76,6 +84,7 @@ class SimilarVarsDetection(AbstractDetector):
             list: {'vuln', 'filename,'contract','vars'}
         """
         results = []
+
         for c in self.contracts:
             allVars = self.detect_sim(c)
             if allVars:
@@ -86,3 +95,4 @@ class SimilarVarsDetection(AbstractDetector):
                     json = self.generate_result(info)
                     results.append(json)
         return results
+        
