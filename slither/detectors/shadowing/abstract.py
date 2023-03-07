@@ -9,9 +9,18 @@ from slither.core.variables.state_variable import StateVariable
 from slither.detectors.abstract_detector import AbstractDetector, DetectorClassification
 from slither.utils.output import Output, AllSupportedOutput
 from .common import is_upgradable_gap_variable
-
+import logging
 
 def detect_shadowing(contract: Contract) -> List[List[StateVariable]]:
+    logging.debug("Checking detect_shadowing file ---------------->")
+    logging.info("Hi I am ravi")
+     
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
+ 
+# Test messages
+    logger.debug("Harmless debug Message")
+    logger.info("Just an information")
     ret: List[List[StateVariable]] = []
     variables_fathers = []
     for father in contract.inheritance:
@@ -33,13 +42,19 @@ class ShadowingAbstractDetection(AbstractDetector):
     """
     Shadowing detection
     """
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
+ 
+# Test messages
+    logger.debug("Harmless debug Message")
+    logger.info("Just an information")
 
     ARGUMENT = "shadowing-abstract"
     HELP = "State variables shadowing from abstract contracts"
     IMPACT = DetectorClassification.MEDIUM
     CONFIDENCE = DetectorClassification.HIGH
 
-    WIKI = "https://github.com/crytic/slither/wiki/Detector-Documentation#state-variable-shadowing-from-abstract-contracts"
+   # WIKI = "https://github.com/crytic/slither/wiki/Detector-Documentation#state-variable-shadowing-from-abstract-contracts"
 
     WIKI_TITLE = "State variable shadowing from abstract contracts"
     WIKI_DESCRIPTION = "Detection of state variables shadowed from abstract contracts."
@@ -62,13 +77,15 @@ contract DerivedContract is BaseContract{
 
     def _detect(self) -> List[Output]:
         """Detect shadowing
-
+        
         Recursively visit the calls
         Returns:
             list: {'vuln', 'filename,'contract','func', 'shadow'}
 
         """
         results: List[Output] = []
+        logging.debug("Checking detect_shadowing file ---------------->")
+        logging.info("Hi I am ravi")
         for contract in self.contracts:
             shadowing = detect_shadowing(contract)
             if shadowing:

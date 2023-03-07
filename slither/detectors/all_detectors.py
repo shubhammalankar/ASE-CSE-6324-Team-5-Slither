@@ -31,10 +31,10 @@ from .functions.external_function import ExternalFunction
 from .statements.controlled_delegatecall import ControlledDelegateCall
 from .attributes.const_functions_asm import ConstantFunctionsAsm
 from .attributes.const_functions_state import ConstantFunctionsState
-from .shadowing.abstract import ShadowingAbstractDetection
-from .shadowing.state import StateShadowing
-from .shadowing.local import LocalShadowing
-from .shadowing.builtin_symbols import BuiltinSymbolShadowing
+#from .shadowing.abstract import ShadowingAbstractDetection
+#from .shadowing.state import StateShadowing
+#from .shadowing.local import LocalShadowing
+#from .shadowing.builtin_symbols import BuiltinSymbolShadowing
 from .operations.block_timestamp import Timestamp
 from .statements.calls_in_loop import MultipleCallsInLoop
 from .statements.incorrect_strict_equality import IncorrectStrictEquality

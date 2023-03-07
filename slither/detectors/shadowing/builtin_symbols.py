@@ -2,6 +2,7 @@
 Module detecting reserved keyword shadowing
 """
 
+import logging
 from slither.detectors.abstract_detector import AbstractDetector, DetectorClassification
 
 
@@ -141,6 +142,7 @@ contract Bug {
 
         Returns:
             list of tuple: (type, definition, [local variable parent])"""
+        logging.debug("Checking builtin_symbols.py file ---------------->")
 
         result = []
 
