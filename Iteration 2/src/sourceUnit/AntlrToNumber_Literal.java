@@ -1,4 +1,4 @@
-package source_unit;
+package sourceUnit;
 
 import org.antlr.v4.runtime.Token;
 import java.util.regex.Matcher;
@@ -15,17 +15,46 @@ public class AntlrToNumber_Literal extends ExprBaseVisitor<Literal>{
 	}
 	
 	public static boolean isHexAddress(String str) {
-	    // Regular expression to match a hex address
-	    String regex = "^0x[0-9a-fA-F]{40}$";
-
-	    // Create a Pattern object from the regex
-	    Pattern pattern = Pattern.compile(regex);
-
-	    // Use the Pattern object to create a Matcher object
-	    Matcher matcher = pattern.matcher(str);
-
-	    // Return true if the Matcher object finds a match, false otherwise
-	    return matcher.matches();
+	    // Check if the input string starts with "0x"
+	    if (!str.startsWith("0x")) {
+	        return false;
+	    }
+	    // Check if the input string has exactly 40 hexadecimal digits after the "0x"
+	    if (str.length() != 42) {
+	        return false;
+	    }
+	    // Check if all characters after the "0x" are hexadecimal digits
+	    for (int i = 2; i < str.length(); i++) {
+	        char c = str.charAt(i);
+	        if (!Character.isDigit(c) && !(c >= 'a' && c <= 'f') && !(c >= 'A' && c <= 'F')) {
+	            return false;
+	        }
+	    }
+	    // If all checks pass, the input string is a valid hex address
+	    return true;
+	}
+	
+	public static boolean isNumeric(String str) {
+	    if (str == null || str.isEmpty()) {
+	        return false;
+	    }
+	    try {
+	        Long.parseLong(str);
+	        return true;
+	    } catch (NumberFormatException e) {}
+	    try {
+	        Integer.parseInt(str);
+	        return true;
+	    } catch (NumberFormatException e) {}
+	    try {
+	        Double.parseDouble(str);
+	        return true;
+	    } catch (NumberFormatException e) {}
+	    try {
+	        Float.parseFloat(str);
+	        return true;
+	    } catch (NumberFormatException e) {}
+	    return false;
 	}
 
 	
@@ -57,16 +86,13 @@ public class AntlrToNumber_Literal extends ExprBaseVisitor<Literal>{
 	    return false;
 	}
 
-
-
 	
 	@Override
 	public Literal visitNumberLiteral (NumberLiteralContext ctx) {
+		
 		Token sttoken = ctx.getStart();
 		int line = sttoken.getLine();
-		
 		String digit=ctx.getChild(0).getText();
-		//System.out.println(getAddressFlag(digit));
 		if (hasFiveOrMoreConsecutiveZeros(digit) && getAddressFlag(digit)) {
 				System.out.println("[Warning] Zero address initialization: "+line+".");
 		}
@@ -75,9 +101,17 @@ public class AntlrToNumber_Literal extends ExprBaseVisitor<Literal>{
 		{
 			System.out.println("[Code Issue] Variable uses too many literals: "+line+".");
 		}
-		else if (!isHexAddress(digit)) {
-			System.out.println("[Error] Incorrect address initialization: "+line+".");
+		
+		if (isHexAddress(digit)) {
+			new Number_Literal(digit);
 		}
+		else if(isNumeric(digit)) {
+				//System.out.println("Number: "+digit+" line: "+line);
+			}
+			
+		else {System.out.println("[Error] Incorrect address initialization: "+line+".");}
+		
+		
 		
 		return new Number_Literal(digit);
 	}

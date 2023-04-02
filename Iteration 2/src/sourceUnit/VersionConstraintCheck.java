@@ -1,4 +1,4 @@
-package source_unit;
+package sourceUnit;
 
 
 public class VersionConstraintCheck extends Attributes {

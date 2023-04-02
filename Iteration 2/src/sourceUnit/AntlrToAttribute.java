@@ -1,4 +1,4 @@
-package source_unit;
+package sourceUnit;
 
 import org.antlr.v4.runtime.Token;
 import antlr.ExprBaseVisitor;
