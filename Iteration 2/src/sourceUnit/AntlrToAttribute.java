@@ -17,27 +17,20 @@ public class AntlrToAttribute extends ExprBaseVisitor<Attributes> {
 	@Override
 	public Attributes visitVersionCheck(VersionCheckContext ctx) {
 		String VersionLiteral=""; 
-		//getting the first character of.		
+		//getting the first token.		
 		Token sttoken = ctx.getStart();
 		int line = sttoken.getLine();
-		//int col = sttoken.getCharPositionInLine() +1;
-		//Token idToken = ctx.I
-		//String versionOp = ctx.getChild(0).getChild(0).getText();
-		// TODO Auto-generated method stub
-		//String VersionLiteral = ctx.getChild(0).getText();
 		if(ctx.getChildCount()>1) {
 			String VersionOperator = ctx.getChild(0).getText();
 			if(!VersionOperator.equalsIgnoreCase("=")) 
 			{
 				System.out.println("[Code Issue] Compiler Version ambiguous or not correct at line:"+line+".");
-				//VersionLiteral = ctx.getChild(1).getText();
 			}
 			
 		}
 		else
 			VersionLiteral = ctx.getChild(0).getText();
 		
-		//System.out.println(VersionError);
 		return new VersionConstraintCheck(VersionLiteral);
 	}
 

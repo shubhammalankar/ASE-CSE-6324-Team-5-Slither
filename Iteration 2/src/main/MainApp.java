@@ -22,10 +22,7 @@ public class MainApp {
 		else {
 			String filename = args[0];
 			ExprParser parser = getParser(filename);
-			//tell Antlr to build a parse tree
-			//parse from start symbol 'PragmaDirective'
 			ParseTree antlrAST= parser.sourceUnit();
-			//Create a Visitor for converting ParseTree into Attributes
 			AntlrToPragmaDirective pragmavisitor = new AntlrToPragmaDirective();
 			
 			

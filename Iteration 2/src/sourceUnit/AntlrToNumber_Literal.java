@@ -1,19 +1,12 @@
 package sourceUnit;
-
 import org.antlr.v4.runtime.Token;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import antlr.ExprBaseVisitor;
 import antlr.ExprParser.NumberLiteralContext;
-
 public class AntlrToNumber_Literal extends ExprBaseVisitor<Literal>{
-
 	public String too_many_digit_warning;
-	
 	public AntlrToNumber_Literal(String too_many_digit_warning) {
 		this.too_many_digit_warning=too_many_digit_warning;
 	}
-	
 	public static boolean isHexAddress(String str) {
 	    // Check if the input string starts with "0x"
 	    if (!str.startsWith("0x")) {
@@ -35,22 +28,27 @@ public class AntlrToNumber_Literal extends ExprBaseVisitor<Literal>{
 	}
 	
 	public static boolean isNumeric(String str) {
-	    if (str == null || str.isEmpty()) {
+	    //Check if String is null or empty.
+		if (str == null || str.isEmpty()) {
 	        return false;
 	    }
 	    try {
+	    	// Check if number is Long.
 	        Long.parseLong(str);
 	        return true;
 	    } catch (NumberFormatException e) {}
 	    try {
+	    	//Check if number is integer.
 	        Integer.parseInt(str);
 	        return true;
 	    } catch (NumberFormatException e) {}
 	    try {
+	    	//Check if number is double.
 	        Double.parseDouble(str);
 	        return true;
 	    } catch (NumberFormatException e) {}
 	    try {
+	    	//Check if number is float.
 	        Float.parseFloat(str);
 	        return true;
 	    } catch (NumberFormatException e) {}
@@ -59,10 +57,12 @@ public class AntlrToNumber_Literal extends ExprBaseVisitor<Literal>{
 
 	
 	public static boolean hasFiveOrMoreConsecutiveZeros(String str) {
-	    if (str == null || str.isEmpty()) {
+		//Check if String is null or empty.
+		if (str == null || str.isEmpty()) {
 	        return false;
 	    }
 	    int zeroCount = 0;
+	    //Check for five or more consecutive zeros.
 	    for (int i = 0; i < str.length(); i++) {
 	        char currentChar = str.charAt(i);
 	        if (currentChar == '0') {
@@ -106,7 +106,7 @@ public class AntlrToNumber_Literal extends ExprBaseVisitor<Literal>{
 			new Number_Literal(digit);
 		}
 		else if(isNumeric(digit)) {
-				//System.out.println("Number: "+digit+" line: "+line);
+				new Number_Literal(digit);
 			}
 			
 		else {System.out.println("[Error] Incorrect address initialization: "+line+".");}
